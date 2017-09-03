@@ -1,0 +1,15 @@
+[package]
+name = "hooks"
+version = "0.1.0"
+authors = ["Shane Qi <qizengtai@gmail.com>"]
+
+[dependencies]
+iron = "0.5.1"
+serde = "1.0.11"
+serde_json = "1.0.2"
+serde_derive = "1.0.11"
+hyper = "0.11.2"
+tokio-core = "0.1.9"
+hyper-tls = "0.1.2"
+dotenv = "0.10.1"
+router = "0.5.1"
