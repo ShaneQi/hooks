@@ -1,3 +1,5 @@
+extern crate url;
+
 use iron;
 use iron::{IronResult, Response};
 use hyper_tls::HttpsConnector;
@@ -7,6 +9,8 @@ use hyper;
 use hyper::client::Client;
 use dotenv;
 use std::io::Read;
+use self::url::form_urlencoded::parse;
+use std::borrow::Cow;
 
 #[derive(Deserialize, Debug)]
 pub struct TravisNotification {
@@ -34,12 +38,17 @@ pub struct TelegramTextMessage {
 }
 
 pub fn travis(req: &mut iron::Request) -> IronResult<Response> {
-    let mut buffer = String::new();
-    let _ = req.body.read_to_string(&mut buffer);
-    let notif_result: serde_json::Result<TravisNotification> = serde_json::from_str(&buffer);
+    let mut body_string = String::new();
+    let _ = req.body.read_to_string(&mut body_string).expect(
+        "Failed to read string from request body.",
+    );
+    let payload_pair: (Cow<str>, Cow<str>) = parse(body_string.as_bytes()).next().expect(
+        "Failued to get payload from request body.",
+    );
+    let payload = payload_pair.1;
+    let notif_result: serde_json::Result<TravisNotification> = serde_json::from_str(&payload);
     match notif_result {
         Result::Ok(notif) => {
-            println!("{}", buffer);
             let mut core = Core::new().unwrap();
             let client = Client::configure()
                 .connector(HttpsConnector::new(4, &core.handle()).unwrap())
@@ -58,7 +67,10 @@ pub fn travis(req: &mut iron::Request) -> IronResult<Response> {
             let post = client.request(req);
             let _ = core.run(post);
         }
-        Result::Err(err) => println!("{}", err),
+        Result::Err(err) => {
+            println!("{}", payload);
+            println!("{}", err);
+        }
     }
     Ok(Response::with((iron::status::Ok, "")))
 }
