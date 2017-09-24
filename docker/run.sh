@@ -7,5 +7,7 @@ docker run \
 rust:1.20 \
 /bin/bash -c \
 "\
-cargo run --release\
+apt update; \
+apt install sshpass; \
+cargo run --release; \
 "

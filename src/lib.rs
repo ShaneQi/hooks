@@ -8,3 +8,4 @@ extern crate hyper_tls;
 extern crate dotenv;
 
 pub mod travis;
+pub mod rusty_blog;

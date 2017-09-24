@@ -8,6 +8,7 @@ use iron::prelude::*;
 fn router() -> router::Router {
     router!{
         travis_ci_notifications: post "/travis" => hooks::travis::travis,
+        rusty_blog_updater: post "/rusty_blog" => hooks::rusty_blog::handle,
     }
 }
 
