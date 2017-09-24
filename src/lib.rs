@@ -9,3 +9,4 @@ extern crate dotenv;
 
 pub mod travis;
 pub mod rusty_blog;
+pub mod telegram;

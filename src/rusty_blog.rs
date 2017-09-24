@@ -2,6 +2,7 @@ use iron;
 use iron::{IronResult, Response};
 use dotenv;
 use std::process::Command;
+use telegram;
 
 pub fn handle(_: &mut iron::Request) -> IronResult<Response> {
     let command_output = Command::new("sshpass")
@@ -14,7 +15,10 @@ pub fn handle(_: &mut iron::Request) -> IronResult<Response> {
         .arg(&update_command())
         .output()
         .expect("failed to execute process");
-    println!("{:?}", command_output);
+    
+    let update_result = format!("Shane's blog is rustier!\n\ncontext:\n{:?}", command_output);
+    println!("{}", update_result);
+    telegram::send_message(update_result);
 
     Ok(Response::with((iron::status::Ok, "")))
 }
