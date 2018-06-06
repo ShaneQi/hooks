@@ -18,7 +18,7 @@ pub fn send_message(message: String) {
         .unwrap();
     let mut req: hyper::Request<hyper::Body> = hyper::Request::new(hyper::Method::Post, uri);
     let msg = TelegramTextMessage {
-        chat_id: 80548625,
+        chat_id: telegram_chat_id(),
         text: message,
         parse_mode: "Markdown".to_string(),
     };
@@ -39,5 +39,14 @@ pub struct TelegramTextMessage {
 fn telegram_bot_token() -> String {
     return dotenv::var("TELEGRAM_BOT_TOKEN").expect(
         "Failed to find telegram bot token in .env file.",
+    );
+}
+
+fn telegram_chat_id() -> i32 {
+    let chat_id_string = dotenv::var("TELEGRAM_CHAT_ID").expect(
+        "Failed to find telegram chat id in .env file.",
+    );
+    return chat_id_string.parse::<i32>().expect(
+        "Failed to parse chat id (i32) from the string in .env file."
     );
 }
