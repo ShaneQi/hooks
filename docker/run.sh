@@ -2,6 +2,7 @@
 docker run \
 -d \
 --name hooks \
+--network GoldenArches \
 -v `pwd`:/hooks \
 -w /hooks \
 rust:1.20 \
