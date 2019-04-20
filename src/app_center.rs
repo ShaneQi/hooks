@@ -35,6 +35,7 @@ pub fn handle(req: &mut iron::Request) -> IronResult<Response> {
 pub fn app_center_notif_msg(notif: AppCenterNotification) -> String {
     let mark = match notif.build_status.as_str() {
         "Succeeded" => "✅",
+        "Fixed" => "✅",
         _ => "❌",
     };
     let line1 = format!(
